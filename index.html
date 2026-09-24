@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7fb">
+  <title>Automation Anywhere — Okta SSO demo</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://global.oktacdn.com/okta-auth-js/7.5.1/okta-auth-js.polyfill.js" crossorigin="anonymous"></script>
+  <script src="https://global.oktacdn.com/okta-auth-js/7.5.1/okta-auth-js.min.js" crossorigin="anonymous"></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/"><span class="brand-mark">AA</span><span>Automation Anywhere</span></a>
+      <span class="prototype-label"><span class="dot"></span> SSO PROTOTYPE</span>
+    </header>
+
+    <section id="login-view" class="login-layout">
+      <div class="intro">
+        <div class="eyebrow">ONE ACCOUNT. ONE SECURE WORKSPACE.</div>
+        <h1>Your work,<br>all in one place.</h1>
+        <p>Sign in with your organization’s Okta account to continue to the Automation Anywhere workspace.</p>
+        <div class="security-note"><span class="shield">✓</span><span>Secure sign-in powered by Okta</span></div>
+      </div>
+      <section class="login-card" aria-labelledby="welcome-heading">
+        <div class="card-icon">✦</div>
+        <h2 id="welcome-heading">Welcome back</h2>
+        <p class="muted">Use your company account to sign in.</p>
+        <button id="sign-in" class="primary-button" type="button">
+          <span>Continue with Okta</span><span aria-hidden="true">→</span>
+        </button>
+        <p id="status" class="status" role="status" aria-live="polite">You’ll be redirected to your organization’s secure sign-in.</p>
+        <div class="card-footer"><span class="lock">▣</span> Your credentials stay with Okta</div>
+      </section>
+    </section>
+
+    <section id="app-view" class="dashboard hidden" aria-labelledby="dashboard-heading">
+      <div class="dashboard-head">
+        <div><div class="eyebrow">AUTOMATION ANYWHERE WORKSPACE</div><h1 id="dashboard-heading">You’re signed in.</h1><p class="muted">This page and its API data are available to authenticated users.</p></div>
+        <button id="sign-out" class="secondary-button" type="button">Sign out</button>
+      </div>
+      <article class="welcome-card"><div class="avatar" id="avatar">N</div><div><div class="eyebrow">SIGNED IN AS</div><h2 id="user-name">Loading profile…</h2><p id="user-email" class="muted"></p></div></article>
+      <article class="api-card"><div class="api-card-heading"><div><div class="eyebrow">PROTECTED FASTAPI ENDPOINT</div><h2>Connection status</h2></div><span class="api-indicator">● API</span></div><p id="api-message" class="muted">Loading protected data…</p></article>
+    </section>
+    <footer><span>Automation Anywhere</span><span>Identity managed by Okta</span></footer>
+  </main>
+</body>
+</html>
