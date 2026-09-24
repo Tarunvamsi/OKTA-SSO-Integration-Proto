@@ -29,7 +29,8 @@
         <h2 id="welcome-heading">Welcome back</h2>
         <p class="muted">Use your company account to sign in.</p>
         <button id="sign-in" class="primary-button" type="button">
-          <span>Continue with Okta</span><span aria-hidden="true">→</span>
+          <span class="button-content"><span id="sign-in-spinner" class="spinner button-spinner hidden" aria-hidden="true"></span><span id="sign-in-label">Continue with Okta</span></span>
+          <span id="sign-in-arrow" aria-hidden="true">→</span>
         </button>
         <p id="status" class="status" role="status" aria-live="polite">You’ll be redirected to your organization’s secure sign-in.</p>
         <div class="card-footer"><span class="lock">▣</span> Your credentials stay with Okta</div>
@@ -46,5 +47,12 @@
     </section>
     <footer><span>Automation Anywhere</span><span>Identity managed by Okta</span></footer>
   </main>
+  <div id="auth-loading" class="loading-overlay hidden" role="status" aria-live="polite" aria-hidden="true">
+    <div class="loading-panel">
+      <span class="spinner loading-spinner" aria-hidden="true"></span>
+      <p id="loading-message" class="loading-message">Connecting securely…</p>
+      <p class="loading-hint">Please keep this window open.</p>
+    </div>
+  </div>
 </body>
 </html>

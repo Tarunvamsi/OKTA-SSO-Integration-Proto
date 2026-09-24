@@ -5,12 +5,29 @@ const OKTA_REDIRECT_URI = "http://localhost:8000/";
 
 const statusEl = document.getElementById("status");
 const signInButton = document.getElementById("sign-in");
+const signInLabel = document.getElementById("sign-in-label");
+const signInSpinner = document.getElementById("sign-in-spinner");
+const signInArrow = document.getElementById("sign-in-arrow");
 const oktaConfigured = !OKTA_ISSUER.includes("YOUR_OKTA_DOMAIN") && !OKTA_CLIENT_ID.includes("YOUR_CLIENT_ID");
 let auth;
 
 function setStatus(message, error = false) {
   statusEl.textContent = message;
   statusEl.classList.toggle("error", error);
+}
+
+function setLoading(visible, message = "Connecting securely…") {
+  const overlay = document.getElementById("auth-loading");
+  document.getElementById("loading-message").textContent = message;
+  overlay.classList.toggle("hidden", !visible);
+  overlay.setAttribute("aria-hidden", String(!visible));
+}
+
+function setSignInBusy(busy, label = "Continue with Okta") {
+  signInButton.disabled = busy;
+  signInLabel.textContent = label;
+  signInSpinner.classList.toggle("hidden", !busy);
+  signInArrow.classList.toggle("hidden", busy);
 }
 
 function showDashboard(claims) {
@@ -51,25 +68,47 @@ async function start() {
   });
 
   try {
-    if (auth.isLoginRedirect()) await auth.handleRedirect();
+    if (auth.isLoginRedirect()) {
+      setLoading(true, "Verifying your sign-in with Okta…");
+      await auth.handleRedirect();
+    }
     if (await auth.isAuthenticated()) {
       const claims = await auth.getUser();
       showDashboard(claims || {});
-      await loadProtectedData();
+      setLoading(true, "Loading your workspace…");
+      try {
+        await loadProtectedData();
+      } catch (error) {
+        console.error(error);
+        const apiMessage = document.getElementById("api-message");
+        apiMessage.textContent = `Could not load protected API data: ${error.message}`;
+        apiMessage.classList.add("api-error");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
     }
   } catch (error) {
     console.error(error);
+    setLoading(false);
     setStatus(error.message || "Sign-in could not be completed. Please try again.", true);
+    setSignInBusy(false);
     if (auth && auth.isLoginRedirect()) history.replaceState({}, document.title, "/");
   }
 }
 
 signInButton.addEventListener("click", async () => {
   if (!auth) return;
-  signInButton.disabled = true;
-  setStatus("Redirecting to Okta…");
+  setSignInBusy(true, "Connecting to Okta…");
+  setStatus("Your browser is opening your organization’s Okta sign-in.");
+  setLoading(true, "Redirecting to your organization’s Okta sign-in…");
   try { await auth.signInWithRedirect(); }
-  catch (error) { setStatus(error.message || "Could not start sign-in.", true); signInButton.disabled = false; }
+  catch (error) {
+    setLoading(false);
+    setStatus(error.message || "Could not start sign-in.", true);
+    setSignInBusy(false);
+  }
 });
 
 document.getElementById("sign-out").addEventListener("click", async () => {
