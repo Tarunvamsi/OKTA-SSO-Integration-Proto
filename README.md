@@ -1,4 +1,4 @@
-# Automation Anywhere: Okta SSO + FastAPI prototype
+# Okta SSO + FastAPI prototype
 
 This prototype has a plain HTML/CSS/JavaScript sign-in page and a FastAPI backend. Okta hosts the sign-in page. The browser uses OpenID Connect Authorization Code with PKCE, then sends an access token to FastAPI. FastAPI validates that token against the Okta authorization server's signing keys.
 
